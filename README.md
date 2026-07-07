@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RE:IDENTITY 現在地診断
 
-## Getting Started
+Identity・Presence・Action の3領域を1〜10点で自己評価し、現在地を可視化する簡易診断アプリです。
 
-First, run the development server:
+- 12問（各領域4問）を回答 → 3ヶ月後の目標スコアを設定 → 結果を表示
+- 結果画面: 領域別スコア、レーダーチャート、総合スコア、強み、優先テーマ、現在起きているズレ、プラン仮提案
+- 採点はすべてクライアント側で実行。ログイン不要・外部データベースなし
+- 本診断は心理検査・性格検査・医療的診断ではありません
+
+## 技術構成
+
+- Next.js (App Router) / TypeScript / Tailwind CSS / Recharts
+
+## 開発
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev    # http://localhost:3000
+npm run build  # 本番ビルド
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 構成
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/
+  page.tsx                # トップ（診断アプリ）
+  diagnosis/
+    DiagnosisApp.tsx      # 7ステップの状態管理
+    lib/questions.ts      # 12問データ
+    lib/scoring.ts        # 採点・強み・優先テーマ・ズレ・プラン提案ロジック
+    components/           # 各ステップのUI
+```

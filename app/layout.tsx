@@ -17,8 +17,9 @@ const notoSerifJP = Noto_Serif_JP({
 });
 
 export const metadata: Metadata = {
-  title: "RE:IDENTITY — 本当のわたしが、選ばれるわたしになる。",
-  description: "自己認知と他者認知を一致させ、一貫した存在感で、信頼と機会を引き寄せる。",
+  title: "現在地診断 | RE:IDENTITY",
+  description:
+    "Identity・Presence・Actionの3領域で、今のあなたの現在地を可視化する簡易診断です。心理検査や医療的診断ではありません。",
 };
 
 export default function RootLayout({
