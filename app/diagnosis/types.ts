@@ -27,3 +27,15 @@ export interface PlanProposal {
   description: string;
   recommended: boolean;
 }
+
+export interface TypeProfile {
+  name: string;
+  en: string;
+  catchcopy: string;
+  description: string;
+}
+
+export interface ScoreBand {
+  label: string;
+  tone: "gold" | "navy" | "slate";
+}

@@ -1,4 +1,4 @@
-const BOOKING_URL = "#";
+import { BOOKING_URL } from "../lib/config";
 
 interface StepCTAProps {
   nickname: string;
@@ -31,6 +31,14 @@ export default function StepCTA({ nickname, onBack }: StepCTAProps) {
           <span className="text-gold shrink-0 mt-0.5">✓</span>
           <span>Light / Standard / Premium のうち、現在地に合ったプランのご案内</span>
         </div>
+      </div>
+
+      <div className="bg-white border border-border rounded-lg p-4 mb-8 text-center">
+        <p className="text-[13px] text-navy leading-relaxed">
+          診断結果の画面（スクリーンショット）をお持ちいただくと、
+          <br className="hidden sm:inline" />
+          セッションがより具体的になります。
+        </p>
       </div>
 
       <div className="flex flex-col items-center gap-4">

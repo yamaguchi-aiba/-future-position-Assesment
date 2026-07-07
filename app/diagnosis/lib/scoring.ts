@@ -1,4 +1,4 @@
-import type { Answers, Domain, DomainScores, PlanProposal, TargetScores } from "../types";
+import type { Answers, Domain, DomainScores, PlanProposal, ScoreBand, TargetScores, TypeProfile } from "../types";
 import { DOMAIN_LABELS, DOMAIN_ORDER, QUESTIONS, questionsByDomain } from "./questions";
 
 /** 領域スコア = 4項目合計 ÷ 40 × 100 */
@@ -138,5 +138,87 @@ export function getPlanProposals(overall: number, gaps: DomainScores): PlanPropo
         : plan.description,
   }));
 }
+
+/** スコア帯の解釈ラベル */
+export function getScoreBand(score: number): ScoreBand {
+  if (score >= 70) return { label: "強みゾーン", tone: "gold" };
+  if (score >= 40) return { label: "成長期", tone: "navy" };
+  return { label: "伸びしろ期", tone: "slate" };
+}
+
+const TYPE_THRESHOLD = 60;
+
+/** 3領域の高低パターン（2^3 = 8通り）に対応するタイプ */
+const TYPE_PROFILES: Record<string, TypeProfile> = {
+  HHH: {
+    name: "体現者",
+    en: "The Embodiment",
+    catchcopy: "軸・存在感・行動がすでに揃った統合タイプ。",
+    description:
+      "自分の軸を理解し、それが振る舞いにも行動にも表れています。ここからは「維持」ではなく、より大きな舞台へ影響力を広げるフェーズです。",
+  },
+  HHL: {
+    name: "構想家",
+    en: "The Visionary",
+    catchcopy: "軸と存在感が光る。行動の仕組み化が飛躍の鍵。",
+    description:
+      "自己理解が深く、周囲への印象も良好です。描いているものを現実に変える「行動の習慣化」が整えば、一気に加速するタイプです。",
+  },
+  HLH: {
+    name: "静かな実践者",
+    en: "The Quiet Achiever",
+    catchcopy: "軸と行動は本物。あとは「伝わり方」だけ。",
+    description:
+      "自分の軸に沿って着実に行動できています。その価値が周囲に十分伝わっていないのが唯一のもったいない点。見せ方が整えば評価が実力に追いつきます。",
+  },
+  LHH: {
+    name: "天性の表現者",
+    en: "The Natural",
+    catchcopy: "存在感と行動力が武器。軸の言語化でさらに加速。",
+    description:
+      "人前での魅力と行動力を兼ね備えています。「自分は何者か」の言語化が進むと、その魅力に一貫性が生まれ、信頼が積み上がっていきます。",
+  },
+  HLL: {
+    name: "内なる探求者",
+    en: "The Seeker",
+    catchcopy: "深い自己理解が財産。表現と行動への翻訳がテーマ。",
+    description:
+      "自分の価値観や強みへの理解が深いタイプです。その内側の豊かさを、振る舞いと日々の行動に翻訳できたとき、大きな変化が始まります。",
+  },
+  LHL: {
+    name: "魅せる原石",
+    en: "The Charisma",
+    catchcopy: "印象力という天性のギフト。軸と行動で本物になる。",
+    description:
+      "周囲を惹きつける力をすでに持っています。自分の軸の言語化と行動の積み重ねが加わると、「感じが良い人」から「信頼される人」へ進化します。",
+  },
+  LLH: {
+    name: "行動の開拓者",
+    en: "The Mover",
+    catchcopy: "まず動ける力は最大の資産。軸と見せ方で成果が定着する。",
+    description:
+      "考えるより先に動ける、貴重な行動力の持ち主です。行動に「自分の軸」と「伝わる見せ方」が加わると、努力が成果と評価に変わり始めます。",
+  },
+  LLL: {
+    name: "リスタートの主人公",
+    en: "The Origin",
+    catchcopy: "伸びしろ最大。いちばん変化を実感できるスタート地点。",
+    description:
+      "3領域すべてにこれからの余白がある、変化がもっとも目に見えるポジションです。小さな一歩の積み重ねが、3ヶ月後には大きな差になります。",
+  },
+};
+
+/** 3領域スコアの高低パターンからタイプを判定する */
+export function getTypeProfile(scores: DomainScores): TypeProfile {
+  const key = DOMAIN_ORDER.map((d) => (scores[d] >= TYPE_THRESHOLD ? "H" : "L")).join("");
+  return TYPE_PROFILES[key];
+}
+
+/** 優先テーマに添える「最初の一歩」 */
+export const FIRST_STEPS: Record<Domain, string> = {
+  identity: "あなたが大切にしている価値観を、思いつくまま3つ書き出してみる",
+  presence: "今日、鏡の前で30秒だけ姿勢と表情を整えてから外に出る",
+  action: "3ヶ月後の目標を、「今週やる小さな行動1つ」に翻訳してみる",
+};
 
 export { DOMAIN_LABELS, DOMAIN_ORDER };

@@ -10,16 +10,18 @@ import {
   getPlanProposals,
   getPriorityTheme,
   getStrengths,
+  getTypeProfile,
 } from "./lib/scoring";
 import StepTop from "./components/StepTop";
 import StepNotice from "./components/StepNotice";
 import StepBasicInfo from "./components/StepBasicInfo";
 import StepQuestions from "./components/StepQuestions";
 import StepTargetScore from "./components/StepTargetScore";
+import StepAnalyzing from "./components/StepAnalyzing";
 import StepResult from "./components/StepResult";
 import StepCTA from "./components/StepCTA";
 
-type Step = "top" | "notice" | "basicInfo" | "questions" | "target" | "result" | "cta";
+type Step = "top" | "notice" | "basicInfo" | "questions" | "target" | "analyzing" | "result" | "cta";
 
 const INITIAL_BASIC_INFO: BasicInfo = { nickname: "", ageRange: "", status: "" };
 const INITIAL_TARGETS: TargetScores = { identity: 70, presence: 70, action: 70 };
@@ -34,6 +36,7 @@ export default function DiagnosisApp() {
   const [basicInfo, setBasicInfo] = useState<BasicInfo>(INITIAL_BASIC_INFO);
   const [targets, setTargets] = useState<TargetScores>(INITIAL_TARGETS);
   const [targetsInitialized, setTargetsInitialized] = useState(false);
+  const [hasAnalyzed, setHasAnalyzed] = useState(false);
 
   const scores = useMemo(() => calcAllScores(answers), [answers]);
   const overall = useMemo(() => calcOverallScore(scores), [scores]);
@@ -42,6 +45,7 @@ export default function DiagnosisApp() {
   const priorityTheme = useMemo(() => getPriorityTheme(scores, gaps), [scores, gaps]);
   const misalignment = useMemo(() => getMisalignmentMessage(scores), [scores]);
   const plans = useMemo(() => getPlanProposals(overall, gaps), [overall, gaps]);
+  const typeProfile = useMemo(() => getTypeProfile(scores), [scores]);
 
   const goTo = (next: Step) => {
     setStep(next);
@@ -68,11 +72,22 @@ export default function DiagnosisApp() {
     goTo("target");
   };
 
+  // 初回のみ「診断中…」演出を挟む（目標を編集し直したときは直接結果へ）
+  const handleShowResult = () => {
+    if (hasAnalyzed) {
+      goTo("result");
+    } else {
+      setHasAnalyzed(true);
+      goTo("analyzing");
+    }
+  };
+
   const handleRestart = () => {
     setAnswers({});
     setBasicInfo(INITIAL_BASIC_INFO);
     setTargets(INITIAL_TARGETS);
     setTargetsInitialized(false);
+    setHasAnalyzed(false);
     goTo("top");
   };
 
@@ -111,10 +126,12 @@ export default function DiagnosisApp() {
           scores={scores}
           targets={targets}
           onChange={handleTargetChange}
-          onNext={() => goTo("result")}
+          onNext={handleShowResult}
           onBack={() => goTo("questions")}
         />
       )}
+
+      {step === "analyzing" && <StepAnalyzing onDone={() => goTo("result")} />}
 
       {step === "result" && (
         <StepResult
@@ -123,6 +140,7 @@ export default function DiagnosisApp() {
           targets={targets}
           gaps={gaps}
           overall={overall}
+          typeProfile={typeProfile}
           strengths={strengths}
           priorityTheme={priorityTheme}
           misalignment={misalignment}
