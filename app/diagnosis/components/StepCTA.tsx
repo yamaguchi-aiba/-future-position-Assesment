@@ -42,7 +42,13 @@ export default function StepCTA({ nickname, onBack }: StepCTAProps) {
       </div>
 
       <div className="flex flex-col items-center gap-4">
-        <a href={BOOKING_URL} className="btn-gold w-full sm:w-auto justify-center" style={{ fontSize: "15px" }}>
+        <a
+          href={BOOKING_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-gold w-full sm:w-auto justify-center"
+          style={{ fontSize: "15px" }}
+        >
           未来現在地セッションを予約する（無料・60分）
           <span aria-hidden>›</span>
         </a>

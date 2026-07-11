@@ -1,6 +1,5 @@
 /**
- * 無料セッションの予約先URL。
- * 公式LINE・Googleフォーム・Calendly などのURLが決まったらここを差し替える。
- * "#" のままの間、申込ボタンは画面遷移しない。
+ * 無料セッションの予約先URL（TimeRex）。
+ * 変更する場合はこのURLを差し替えるだけで、申込ボタンすべてに反映される。
  */
-export const BOOKING_URL = "#";
+export const BOOKING_URL = "https://timerex.net/s/makiishitobi/49295ce4";
